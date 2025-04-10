@@ -1,5 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;    定義基本轉換與預先計算乘法結果之事實            ;;;
+;;;    定義基本轉換與預先計算乘法結果之事實                 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; 定義羅馬數字對應表
@@ -28,43 +28,8 @@
    (slot factor)
    (slot base)
    (slot product))
-
-(deffacts precomputed-products
-   ;; factor 10 的運算結果
-   (multiplier (factor 10) (base 1)     (product 10))
-   (multiplier (factor 10) (base 10)    (product 100))
-   (multiplier (factor 10) (base 100)   (product 1000))
-   (multiplier (factor 10) (base 1000)  (product 10000))
-   (multiplier (factor 10) (base 10000) (product 100000))
-   (multiplier (factor 10) (base 100000)(product 1000000))
-   
-   ;; factor 5 的運算結果
-   (multiplier (factor 5) (base 1)     (product 5))
-   (multiplier (factor 5) (base 10)    (product 50))
-   (multiplier (factor 5) (base 100)   (product 500))
-   (multiplier (factor 5) (base 1000)  (product 5000))
-   (multiplier (factor 5) (base 10000) (product 50000))
-   (multiplier (factor 5) (base 100000)(product 500000))
-   
-   ;; factor 9 的運算結果
-   (multiplier (factor 9) (base 1)     (product 9))
-   (multiplier (factor 9) (base 10)    (product 90))
-   (multiplier (factor 9) (base 100)   (product 900))
-   (multiplier (factor 9) (base 1000)  (product 9000))
-   (multiplier (factor 9) (base 10000) (product 90000))
-   (multiplier (factor 9) (base 100000)(product 900000))
-   
-   ;; factor 4 的運算結果
-   (multiplier (factor 4) (base 1)     (product 4))
-   (multiplier (factor 4) (base 10)    (product 40))
-   (multiplier (factor 4) (base 100)   (product 400))
-   (multiplier (factor 4) (base 1000)  (product 4000))
-   (multiplier (factor 4) (base 10000) (product 40000))
-   (multiplier (factor 4) (base 100000)(product 400000))
-)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;                   程式流程規則                      ;;;
+;;;                   程式流程規則                        ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; 輸入阿拉伯數字 (輸入 -1 結束)
@@ -108,15 +73,11 @@
    ?f2 <- (number ?num)
    (test (= (integer (/ ?num ?digit)) 9))
    (conversion (arabic ?digit) (roman ?symbol1))
-   ;; 利用 precomputed-products 取出 factor=10 的結果
-   (multiplier (factor 10) (base ?digit) (product ?prod10))
-   (conversion (arabic ?prod10) (roman ?symbol2))
-   ;; 取得 factor=9 的結果用於餘數運算
-   (multiplier (factor 9) (base ?digit) (product ?prod9))
+   (conversion (arabic =(* 10 ?digit)) (roman ?symbol2))
    =>
    (retract ?f1 ?f2)
    (printout t ?symbol1 ?symbol2)
-   (assert (number (mod ?num ?prod9)))
+   (assert (number (mod ?num (* 9 ?digit))))
    (assert (digit (integer (/ ?digit 10))))
 )
 
@@ -126,15 +87,11 @@
    ?f2 <- (number ?num)
    (test (= (integer (/ ?num ?digit)) 4))
    (conversion (arabic ?digit) (roman ?symbol1))
-   ;; 利用 factor=5 預先計算的結果
-   (multiplier (factor 5) (base ?digit) (product ?prod5))
-   (conversion (arabic ?prod5) (roman ?symbol2))
-   ;; 並取出 factor=4 的結果以作模運算使用
-   (multiplier (factor 4) (base ?digit) (product ?prod4))
+   (conversion (arabic =(* 5 ?digit)) (roman ?symbol2))
    =>
    (retract ?f1 ?f2)
    (printout t ?symbol1 ?symbol2)
-   (assert (number (mod ?num ?prod4)))
+   (assert (number (mod ?num (* 4 ?digit))))
    (assert (digit (integer (/ ?digit 10))))
 )
 
@@ -144,8 +101,7 @@
    ?f2 <- (number ?num)
    (test (>= (integer (/ ?num ?digit)) 5))
    (test (< (integer (/ ?num ?digit)) 9))
-   (multiplier (factor 5) (base ?digit) (product ?prod5))
-   (conversion (arabic ?prod5) (roman ?symbol5))
+   (conversion (arabic =(* 5 ?digit)) (roman ?symbol5))
    (conversion (arabic ?digit) (roman ?symbol1))
    =>
    (retract ?f1 ?f2)
