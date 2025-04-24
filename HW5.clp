@@ -20,6 +20,6 @@
     (declare (salience -1))
     (data (numbers $?x))
    =>
-   (printout t "The result is :" ?x crlf)
+   (printout t "The result is :" (implode$ ?x) crlf)
    (halt)
 )
