@@ -8,7 +8,7 @@
 (defrule assert-data
 (phase load-data)
 =>
-(load-facts "record-01.txt")
+(load-facts "record-02.txt")
 (open "recommend.txt" out "w")
 )
 
