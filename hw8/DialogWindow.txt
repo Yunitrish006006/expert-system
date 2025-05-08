@@ -1,80 +1,801 @@
-         CLIPS (V6.22 06/15/04)
-CLIPS> (load "D:/school/專家系統-碩/hw8/hw8.clp")
-Defining deftemplate: ballot
-Defining deftemplate: candidate
-Defining deftemplate: counted
-Defining deffacts: initial
-Defining defrule: assert-data +j
-Defining defrule: count-first-choices 
-[PRNTUTIL2] Syntax Error:  Check appropriate syntax for deftemplate patterns.
+Candidate is removed. (Number of Votes: 9999)
+The 1889 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1890 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1891 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1892 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1893 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1894 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1895 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1896 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1897 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1898 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1899 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1900 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1901 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1902 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1903 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1904 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1905 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1906 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1907 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1908 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1909 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1910 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1911 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1912 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1913 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1914 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1915 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1916 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1917 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1918 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1919 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1920 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1921 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1922 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1923 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1924 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1925 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1926 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1927 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1928 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1929 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1930 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1931 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1932 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1933 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1934 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1935 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1936 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1937 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1938 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1939 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1940 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1941 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1942 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1943 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1944 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1945 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1946 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1947 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1948 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1949 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1950 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1951 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1952 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1953 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1954 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1955 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1956 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1957 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1958 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1959 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1960 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1961 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1962 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1963 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1964 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1965 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1966 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1967 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1968 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1969 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1970 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1971 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1972 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1973 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1974 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1975 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1976 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1977 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1978 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1979 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1980 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1981 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1982 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1983 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1984 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1985 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1986 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1987 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1988 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1989 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1990 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1991 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1992 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1993 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1994 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1995 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1996 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1997 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1998 round:
+Candidate is removed. (Number of Votes: 9999)
+The 1999 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2000 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2001 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2002 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2003 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2004 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2005 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2006 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2007 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2008 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2009 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2010 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2011 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2012 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2013 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2014 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2015 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2016 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2017 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2018 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2019 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2020 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2021 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2022 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2023 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2024 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2025 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2026 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2027 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2028 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2029 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2030 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2031 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2032 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2033 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2034 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2035 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2036 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2037 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2038 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2039 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2040 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2041 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2042 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2043 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2044 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2045 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2046 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2047 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2048 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2049 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2050 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2051 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2052 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2053 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2054 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2055 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2056 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2057 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2058 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2059 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2060 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2061 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2062 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2063 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2064 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2065 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2066 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2067 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2068 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2069 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2070 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2071 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2072 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2073 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2074 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2075 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2076 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2077 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2078 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2079 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2080 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2081 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2082 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2083 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2084 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2085 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2086 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2087 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2088 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2089 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2090 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2091 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2092 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2093 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2094 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2095 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2096 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2097 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2098 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2099 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2100 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2101 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2102 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2103 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2104 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2105 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2106 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2107 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2108 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2109 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2110 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2111 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2112 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2113 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2114 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2115 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2116 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2117 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2118 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2119 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2120 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2121 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2122 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2123 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2124 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2125 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2126 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2127 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2128 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2129 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2130 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2131 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2132 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2133 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2134 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2135 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2136 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2137 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2138 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2139 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2140 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2141 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2142 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2143 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2144 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2145 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2146 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2147 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2148 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2149 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2150 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2151 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2152 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2153 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2154 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2155 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2156 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2157 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2158 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2159 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2160 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2161 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2162 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2163 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2164 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2165 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2166 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2167 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2168 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2169 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2170 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2171 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2172 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2173 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2174 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2175 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2176 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2177 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2178 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2179 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2180 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2181 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2182 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2183 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2184 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2185 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2186 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2187 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2188 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2189 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2190 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2191 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2192 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2193 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2194 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2195 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2196 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2197 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2198 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2199 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2200 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2201 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2202 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2203 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2204 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2205 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2206 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2207 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2208 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2209 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2210 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2211 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2212 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2213 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2214 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2215 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2216 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2217 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2218 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2219 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2220 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2221 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2222 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2223 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2224 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2225 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2226 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2227 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2228 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2229 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2230 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2231 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2232 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2233 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2234 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2235 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2236 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2237 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2238 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2239 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2240 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2241 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2242 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2243 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2244 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2245 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2246 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2247 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2248 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2249 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2250 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2251 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2252 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2253 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2254 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2255 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2256 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2257 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2258 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2259 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2260 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2261 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2262 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2263 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2264 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2265 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2266 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2267 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2268 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2269 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2270 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2271 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2272 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2273 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2274 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2275 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2276 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2277 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2278 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2279 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2280 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2281 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2282 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2283 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2284 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2285 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2286 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2287 round:
+Candidate is removed. (Number of Votes: 9999)
+The 2288 round:
 
-ERROR:
-(defrule MAIN::count-first-choices
-   (phase count-first-choices)
-   (ballot (id ?id) (order ?first $?))
-   ?c <- (candidate (no ?first) (votes ?votes))
-   (not (counted ?id
-Defining defrule: finish-first-count +j
-Defining defrule: find-elected +j+j+j+j
-Defining defrule: last-remaining-candidate 
-[TMPLTDEF1] Invalid slot not not defined in corresponding deftemplate candidate.
-
-ERROR:
-(defrule MAIN::last-remaining-candidate
-   (declare (salience -5))
-   (phase find-elected)
-   (candidate (no ?no) (votes ?votes))
-   (not (removed ?no))
-   (not (and (candidate (no ?no2&:(neq ?no ?no2)) (not
-Defining defrule: no-winner-found =j
-Defining defrule: find-min-votes +j+j+j+j
-Defining defrule: mark-candidates-for-removal =j=j+j+j+j
-Defining defrule: prepare-removal =j
-Defining defrule: print-removed +j+j
-Defining defrule: print-removed-names +j+j
-Defining defrule: finish-printing =j+j+j+j
-Defining defrule: prepare-next-round +j+j+j+j
-Defining defrule: reset-votes +j+j
-Defining defrule: clear-counted 
-[PRNTUTIL2] Syntax Error:  Check appropriate syntax for deftemplate patterns.
-
-ERROR:
-(defrule MAIN::clear-counted
-   (phase reset-votes)
-   ?c <- (counted ?id
-Defining defrule: start-next-round =j
-Defining defrule: redistribute-votes 
-[PRNTUTIL2] Syntax Error:  Check appropriate syntax for deftemplate patterns.
-
-ERROR:
-(defrule MAIN::redistribute-votes
-   (phase count-redistributed)
-   (ballot (id ?id) (order $?prefs))
-   (not (counted ?id
-Defining defrule: find-first-valid-preference 
-[PRNTUTIL2] Syntax Error:  Check appropriate syntax for deftemplate pattern.
-
-ERROR:
-(defrule MAIN::find-first-valid-preference
-   (phase count-redistributed)
-   ?p <- (process-ballot ?id ?first $?rest)
-   (not (removed ?first))
-   ?c <- (candidate (no ?first) (votes ?votes))
-   =>
-   (retract ?p)
-   (modify ?c (votes (+ ?votes 1)))
-   (assert (counted ?id
-Defining defrule: skip-removed +j+j+j
-Defining defrule: all-preferences-removed 
-[PRNTUTIL2] Syntax Error:  Check appropriate syntax for deftemplate pattern.
-
-ERROR:
-(defrule MAIN::all-preferences-removed
-   (phase count-redistributed)
-   ?p <- (process-ballot ?id)
-   =>
-   (retract ?p)
-   (assert (counted ?id
-Defining defrule: finish-redistribution =j+j
-FALSE
-CLIPS> 

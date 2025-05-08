@@ -15,7 +15,7 @@
   ?f <- (phase load-data)
   =>
   (retract ?f)
-  (load-facts "voting-01.txt")
+  (load-facts "voting-02.txt")
   (printout t "The 1 round:" crlf)
   (assert (phase count-first-choices))
   (assert (round 1))
@@ -105,8 +105,10 @@
 
 ;; 完成標記最少票數的候選人，準備打印結果
 (defrule prepare-removal
-  (declare (salience -10))
+  (declare (salience -15))
   ?f <- (phase find-min)
+  (min-votes ?min)
+  (or (to-remove (no ?)) (test (> ?min 0)))
   =>
   (retract ?f)
   (assert (phase print-removed))
@@ -154,29 +156,51 @@
   (retract ?p ?r ?m)
   (assert (round (+ ?round 1)))
   (printout t "The " (+ ?round 1) " round:" crlf)
+  (assert (phase reset-votes-start))
+  (assert (reset-votes-flag))
+)
+
+;; 初始化重置候選人票數
+(defrule start-reset-votes
+  (phase reset-votes-start)
+  ?p <- (phase reset-votes-start)
+  =>
+  (retract ?p)
   (assert (phase reset-votes))
 )
 
-;; 重置所有候選人票數
+;; 重置所有候選人票數 - 修改成只修改一個而不產生新的實例
 (defrule reset-votes
   (phase reset-votes)
-  ?c <- (candidate (no ?no) (votes ?votes))
+  ?c <- (candidate (no ?no) (votes ?votes&:(> ?votes 0)))
   =>
   (modify ?c (votes 0))
 )
 
+;; 完成重置候選人票數
+(defrule finish-reset-votes
+  (declare (salience -5))
+  ?p <- (phase reset-votes)
+  ?f <- (reset-votes-flag)
+  (not (candidate (votes ?v&:(> ?v 0))))
+  =>
+  (retract ?p ?f)
+  (assert (phase clear-counted))
+)
+
 ;; 清除已計票標記，準備重新計票
 (defrule clear-counted
-  (phase reset-votes)
+  (phase clear-counted)
   ?c <- (counted (id ?id))
   =>
   (retract ?c)
 )
 
-;; 完成票數重置，開始下一輪計票
-(defrule start-next-round
-  (declare (salience -10))
-  ?p <- (phase reset-votes)
+;; 完成清除計票標記
+(defrule finish-clear-counted
+  (declare (salience -5))
+  ?p <- (phase clear-counted)
+  (not (counted (id ?)))
   =>
   (retract ?p)
   (assert (phase count-redistributed))
