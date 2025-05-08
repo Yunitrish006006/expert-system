@@ -1,0 +1,39 @@
+         CLIPS (V6.22 06/15/04)
+CLIPS> (load "D:/school/專家系統-碩/hw8/hw8.clp")
+Defining deftemplate: ballot
+Defining deftemplate: candidate
+Defining deffacts: initial
+Defining defrule: assert-data +j
+Defining defrule: count-first +j+j+j+j
+Defining defrule: change-phase-1 =j
+Defining defrule: count-total-ballots 
+[EXPRNPSR3] Missing function declaration for find-all-facts.
+
+ERROR:
+(defrule MAIN::count-total-ballots
+   (phase count-total)
+   =>
+   (bind ?ballots (length$ (find-all-facts
+Defining defrule: find-elected +j+j+j
+Defining defrule: find-least =j+j+j+j+j
+Defining defrule: mark-lowest-candidates +j+j+j
+Defining defrule: switch-to-remove =j
+Defining defrule: remove-candidate +j+j+j
+Defining defrule: cleanup-for-next-round 
+[EXPRNPSR3] Missing function declaration for do-for-all-facts.
+
+ERROR:
+(defrule MAIN::cleanup-for-next-round
+   (declare (salience -10))
+   ?f1 <- (phase do-remove)
+   ?f2 <- (least ?l)
+   ?f3 <- (processed $?)
+   ?f4 <- (round ?r)
+   =>
+   (retract ?f1 ?f2 ?f3)
+   (retract ?f4)
+   (do-for-all-facts
+Defining defrule: fail-all-removed =j+j
+Defining defrule: continue-running +j
+FALSE
+CLIPS> 
