@@ -2,38 +2,79 @@
 CLIPS> (load "D:/school/專家系統-碩/hw8/hw8.clp")
 Defining deftemplate: ballot
 Defining deftemplate: candidate
+Defining deftemplate: counted
 Defining deffacts: initial
 Defining defrule: assert-data +j
-Defining defrule: count-first +j+j+j+j
-Defining defrule: change-phase-1 =j
-Defining defrule: count-total-ballots 
-[EXPRNPSR3] Missing function declaration for find-all-facts.
+Defining defrule: count-first-choices 
+[PRNTUTIL2] Syntax Error:  Check appropriate syntax for deftemplate patterns.
 
 ERROR:
-(defrule MAIN::count-total-ballots
-   (phase count-total)
-   =>
-   (bind ?ballots (length$ (find-all-facts
-Defining defrule: find-elected +j+j+j
-Defining defrule: find-least =j+j+j+j+j
-Defining defrule: mark-lowest-candidates +j+j+j
-Defining defrule: switch-to-remove =j
-Defining defrule: remove-candidate +j+j+j
-Defining defrule: cleanup-for-next-round 
-[EXPRNPSR3] Missing function declaration for do-for-all-facts.
+(defrule MAIN::count-first-choices
+   (phase count-first-choices)
+   (ballot (id ?id) (order ?first $?))
+   ?c <- (candidate (no ?first) (votes ?votes))
+   (not (counted ?id
+Defining defrule: finish-first-count +j
+Defining defrule: find-elected +j+j+j+j
+Defining defrule: last-remaining-candidate 
+[TMPLTDEF1] Invalid slot not not defined in corresponding deftemplate candidate.
 
 ERROR:
-(defrule MAIN::cleanup-for-next-round
-   (declare (salience -10))
-   ?f1 <- (phase do-remove)
-   ?f2 <- (least ?l)
-   ?f3 <- (processed $?)
-   ?f4 <- (round ?r)
+(defrule MAIN::last-remaining-candidate
+   (declare (salience -5))
+   (phase find-elected)
+   (candidate (no ?no) (votes ?votes))
+   (not (removed ?no))
+   (not (and (candidate (no ?no2&:(neq ?no ?no2)) (not
+Defining defrule: no-winner-found =j
+Defining defrule: find-min-votes +j+j+j+j
+Defining defrule: mark-candidates-for-removal =j=j+j+j+j
+Defining defrule: prepare-removal =j
+Defining defrule: print-removed +j+j
+Defining defrule: print-removed-names +j+j
+Defining defrule: finish-printing =j+j+j+j
+Defining defrule: prepare-next-round +j+j+j+j
+Defining defrule: reset-votes +j+j
+Defining defrule: clear-counted 
+[PRNTUTIL2] Syntax Error:  Check appropriate syntax for deftemplate patterns.
+
+ERROR:
+(defrule MAIN::clear-counted
+   (phase reset-votes)
+   ?c <- (counted ?id
+Defining defrule: start-next-round =j
+Defining defrule: redistribute-votes 
+[PRNTUTIL2] Syntax Error:  Check appropriate syntax for deftemplate patterns.
+
+ERROR:
+(defrule MAIN::redistribute-votes
+   (phase count-redistributed)
+   (ballot (id ?id) (order $?prefs))
+   (not (counted ?id
+Defining defrule: find-first-valid-preference 
+[PRNTUTIL2] Syntax Error:  Check appropriate syntax for deftemplate pattern.
+
+ERROR:
+(defrule MAIN::find-first-valid-preference
+   (phase count-redistributed)
+   ?p <- (process-ballot ?id ?first $?rest)
+   (not (removed ?first))
+   ?c <- (candidate (no ?first) (votes ?votes))
    =>
-   (retract ?f1 ?f2 ?f3)
-   (retract ?f4)
-   (do-for-all-facts
-Defining defrule: fail-all-removed =j+j
-Defining defrule: continue-running +j
+   (retract ?p)
+   (modify ?c (votes (+ ?votes 1)))
+   (assert (counted ?id
+Defining defrule: skip-removed +j+j+j
+Defining defrule: all-preferences-removed 
+[PRNTUTIL2] Syntax Error:  Check appropriate syntax for deftemplate pattern.
+
+ERROR:
+(defrule MAIN::all-preferences-removed
+   (phase count-redistributed)
+   ?p <- (process-ballot ?id)
+   =>
+   (retract ?p)
+   (assert (counted ?id
+Defining defrule: finish-redistribution =j+j
 FALSE
 CLIPS> 
