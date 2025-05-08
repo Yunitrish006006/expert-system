@@ -5,7 +5,7 @@
   ?f <- (phase load-data)
   =>
   (retract ?f)
-  (load-facts "hw8/vote-01.txt")
+  (load-facts "voting-01.txt")
   (printout t "The 1 round:" crlf)
   (assert (phase count))
   (assert (round 1))
