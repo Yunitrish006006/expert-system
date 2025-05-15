@@ -1,260 +1,169 @@
 (deftemplate ballot (slot id) (multislot order))
 (deftemplate candidate (slot no) (slot votes))
-(deftemplate counted (slot id))
-(deftemplate removed (slot no))
-(deftemplate to-remove (slot no))
-(deftemplate process-ballot (slot id) (multislot prefs))
 
-;; 初始階段設置
-(deffacts initial
-  (phase load-data)
-)
+(deffacts initial (phase load-data))
 
-;; 載入資料並開始第一輪投票
+
+(deffunction not-member$ (?item $?list)
+   (if (member$ ?item ?list) then FALSE else TRUE))
+
+(deffunction count-facts (?template-name)
+   (bind ?count 0)
+   (do-for-all-facts ((?f ?template-name)) TRUE
+      (bind ?count (+ ?count 1)))
+   (return ?count))
+
+
 (defrule assert-data
-  ?f <- (phase load-data)
-  =>
-  (retract ?f)
-  (load-facts "voting-02.txt")
-  (printout t "The 1 round:" crlf)
-  (assert (phase count-first-choices))
-  (assert (round 1))
+    ?f <- (phase load-data)
+    =>
+    (retract ?f)
+    (load-facts "hw8/voting-02.txt")
+    (printout t "The 1 round:" crlf)
+    (assert (phase count))
+    (assert (round 1))
+    (assert (remove))
+    (assert (processed))
+    (assert (least none))
+    (assert (total (count-facts ballot)))
+    (assert (can_cnt (count-facts candidate)))
 )
 
-;; 計算第一輪選票的第一優先選擇
-(defrule count-first-choices
-  (phase count-first-choices)
-  (ballot (id ?id) (order ?first $?))
-  ?c <- (candidate (no ?first) (votes ?votes))
-  (not (counted (id ?id)))
-  =>
-  (modify ?c (votes (+ ?votes 1)))
-  (assert (counted (id ?id)))
+(defrule hard-trick
+    ?f <- (phase before-cnt)
+    (ballot (id B001) (order $?order))
+    =>
+    (retract ?f)
+    (assert (can_cnt (length$ $?order)))
+    (assert (phase count))
 )
 
-;; 第一輪計票完成，轉換到尋找當選人階段
-(defrule finish-first-count
-  (declare (salience -10))
-  ?f <- (phase count-first-choices)
-  =>
-  (retract ?f)
-  (assert (phase find-elected))
+
+(defrule count-first
+    (phase count)
+    (ballot (id ?id) (order ?first $?))
+    ?f1 <- (candidate (no ?first) (votes ?votes))
+    ?f2 <- (processed $?processed)
+    (test (not-member$ ?id $?processed))
+    =>
+    (retract ?f2)
+    (modify ?f1 (votes (+ ?votes 1)))
+    (assert (processed $?processed ?id))
 )
 
-;; 尋找當選人：檢查是否有候選人獲得超過半數選票
-(defrule find-elected
-  (phase find-elected)
-  (candidate (no ?no) (votes ?votes))
-  (total ?total)
-  (test (> ?votes (/ ?total 2)))
-  ?r <- (round ?round)
-  =>
-  (printout t "Candidate " ?no " is elected. (Number of Votes: " ?votes ")" crlf)
-  (retract ?r)
-  (halt)
+(defrule change-phase-to-find
+    (declare (salience -10))
+    ?f <- (phase count)
+    =>
+    (retract ?f)
+    (assert (phase find-elected))
 )
 
-;; 當只剩下一位未被移除的候選人時，該候選人當選
-(defrule last-remaining-candidate
-  (declare (salience -5))
-  (phase find-elected)
-  (candidate (no ?no) (votes ?votes))
-  (not (removed (no ?no)))
-  (not (and (candidate (no ?no2&:(neq ?no ?no2)))
-            (not (removed (no ?no2)))))
-  ?r <- (round ?round)
-  =>
-  (printout t "Candidate " ?no " is elected. (Number of Votes: " ?votes ")" crlf)
-  (retract ?r)
-  (halt)
+
+
+
+(defrule find-elected-majority
+    (phase find-elected)
+    (round ?r)
+    (total ?t)
+    (remove $?remove)
+    (candidate (no ?c) (votes ?v))
+    (test (not (member$ ?c $?remove)))
+    (test (> ?v (/ ?t 2)))
+    =>
+    (printout t "Candidate " ?c " is elected. (Number of Votes: " ?v ")" crlf)
+    (halt)
 )
 
-;; 如果沒有當選人，轉換到尋找最少票數的候選人階段
-(defrule no-winner-found
-  (declare (salience -10))
-  ?f <- (phase find-elected)
-  =>
-  (retract ?f)
-  (assert (phase find-min))
-  (assert (min-votes 9999))
+(defrule find-current-least
+    (phase find-elected)
+    (candidate (no ?id) (votes ?votes))
+    (remove $?remove)
+    ?f_least <- (least ?least)
+    (test (not (member$ ?id $?remove)))
+    (test (or (eq ?least none) (< ?votes ?least)))
+    =>
+    (retract ?f_least)
+    (assert (least ?votes))
 )
 
-;; 找出所有未被移除候選人的最小票數
-(defrule find-min-votes
-  (phase find-min)
-  ?m <- (min-votes ?min)
-  (candidate (no ?no) (votes ?votes))
-  (not (removed (no ?no)))
-  (test (< ?votes ?min))
-  =>
-  (retract ?m)
-  (assert (min-votes ?votes))
+(defrule mark-for-removal
+    (declare (salience -1))
+    (phase find-elected)
+    ?f_c <- (candidate (no ?id) (votes ?votes))
+    ?f_rm <- (remove $?remove)
+    (least ?least)
+    (test (not (eq ?least none)))
+    (test (not (member$ ?id $?remove)))
+    (test (= ?votes ?least))
+    =>
+    (retract ?f_rm)
+    (retract ?f_c)
+    (printout t "Candidate " ?id " ")
+    (assert (remove $?remove ?id))
 )
 
-;; 標記所有獲得最少票數的候選人準備移除
-(defrule mark-candidates-for-removal
-  (declare (salience -5))
-  (phase find-min)
-  (min-votes ?min)
-  (candidate (no ?no) (votes ?votes&:(= ?votes ?min)))
-  (not (removed (no ?no)))
-  (not (to-remove (no ?no)))
-  =>
-  (assert (to-remove (no ?no)))
+(defrule check-failure
+    (declare (salience -5))
+    ?f <- (phase find-elected)
+    (can_cnt ?can_cnt)
+    (remove $?remove)
+    (least ?least) 
+    (test (= ?can_cnt (length$ $?remove)))
+    =>
+    (retract ?f)
+    (printout t " is removed. (Number of Votes: " ?least ")" crlf) ;; 💡 新增補印
+    (assert (phase halt))
+    (printout t crlf "Fail: All candidate are removed" crlf)
 )
 
-;; 完成標記最少票數的候選人，準備打印結果
-(defrule prepare-removal
-  (declare (salience -15))
-  ?f <- (phase find-min)
-  (min-votes ?min)
-  (or (to-remove (no ?)) (test (> ?min 0)))
-  =>
-  (retract ?f)
-  (assert (phase print-removed))
+
+(defrule change-phase-to-next
+    (declare (salience -10))
+    ?f <- (phase find-elected)
+    (least ?least)
+    =>
+    (retract ?f)
+    (assert (phase next-round))
+    (printout t " is removed. (Number of Votes: " ?least ")" crlf)
 )
 
-;; 打印被移除的候選人
-(defrule print-removed
-  (phase print-removed)
-  (min-votes ?min)
-  =>
-  (printout t "Candidate ")
-  (assert (phase print-names))
-)
 
-;; 循環打印所有被移除候選人的編號
-(defrule print-removed-names
-  (phase print-names)
-  ?r <- (to-remove (no ?no))
-  =>
-  (retract ?r)
-  (assert (removed (no ?no)))
-  (printout t ?no " ")
-)
+;重新
 
-;; 完成打印被移除候選人名單
-(defrule finish-printing
-  (declare (salience -10))
-  (phase print-names)
-  (min-votes ?min)
-  (not (to-remove (no ?)))
-  ?p <- (phase print-names)
-  =>
-  (retract ?p)
-  (printout t "is removed. (Number of Votes: " ?min ")" crlf)
-  (assert (phase prepare-next-round))
-)
 
-;; 準備下一輪計票
-(defrule prepare-next-round
-  (phase prepare-next-round)
-  ?p <- (phase prepare-next-round)
-  ?r <- (round ?round)
-  ?m <- (min-votes ?min)
-  =>
-  (retract ?p ?r ?m)
-  (assert (round (+ ?round 1)))
-  (printout t "The " (+ ?round 1) " round:" crlf)
-  (assert (phase reset-votes-start))
-  (assert (reset-votes-flag))
-)
-
-;; 初始化重置候選人票數
-(defrule start-reset-votes
-  (phase reset-votes-start)
-  ?p <- (phase reset-votes-start)
-  =>
-  (retract ?p)
-  (assert (phase reset-votes))
-)
-
-;; 重置所有候選人票數 - 修改成只修改一個而不產生新的實例
 (defrule reset-votes
-  (phase reset-votes)
-  ?c <- (candidate (no ?no) (votes ?votes&:(> ?votes 0)))
-  =>
-  (modify ?c (votes 0))
+    (phase next-round)
+    ?f_v <- (candidate (no ?no) (votes ?votes))
+    =>
+    (modify ?f_v (votes 0))
 )
 
-;; 完成重置候選人票數
-(defrule finish-reset-votes
-  (declare (salience -5))
-  ?p <- (phase reset-votes)
-  ?f <- (reset-votes-flag)
-  (not (candidate (votes ?v&:(> ?v 0))))
-  =>
-  (retract ?p ?f)
-  (assert (phase clear-counted))
+(defrule remove-eliminated-from-ballots
+    (phase next-round)
+    ?f <- (ballot (id ?) (order $?front ?no $?rear))
+    (remove $?remove)
+    (test (member$ ?no $?remove))
+    =>
+    (modify ?f (order $?front $?rear))
 )
 
-;; 清除已計票標記，準備重新計票
-(defrule clear-counted
-  (phase clear-counted)
-  ?c <- (counted (id ?id))
-  =>
-  (retract ?c)
+(defrule prepare-next-round
+    (declare (salience -10))
+    ?f <- (phase next-round)
+    ?f_rnd <- (round ?round)
+    ?f_least <- (least ?)
+    ?f_p <- (processed $?p)
+    =>
+    (printout t "The " (+ ?round 1) " round:" crlf)
+    (retract ?f)
+    (retract ?f_rnd)
+    (retract ?f_least)
+    (retract ?f_p)
+    (assert (round (+ ?round 1)))
+    (assert (least none))
+    (assert (phase count))
+    (assert (processed))
 )
-
-;; 完成清除計票標記
-(defrule finish-clear-counted
-  (declare (salience -5))
-  ?p <- (phase clear-counted)
-  (not (counted (id ?)))
-  =>
-  (retract ?p)
-  (assert (phase count-redistributed))
-)
-
-;; 重新分配選票: 處理每張選票
-(defrule redistribute-votes
-  (phase count-redistributed)
-  (ballot (id ?id) (order $?prefs))
-  (not (counted (id ?id)))
-  =>
-  (assert (process-ballot (id ?id) (prefs $?prefs)))
-)
-
-;; 處理選票: 尋找未被移除的第一個優先選擇
-(defrule find-first-valid-preference
-  (phase count-redistributed)
-  ?p <- (process-ballot (id ?id) (prefs ?first $?rest))
-  (not (removed (no ?first)))
-  ?c <- (candidate (no ?first) (votes ?votes))
-  =>
-  (retract ?p)
-  (modify ?c (votes (+ ?votes 1)))
-  (assert (counted (id ?id)))
-)
-
-;; 處理選票: 第一優先已被移除，檢查下一個
-(defrule skip-removed
-  (phase count-redistributed)
-  ?p <- (process-ballot (id ?id) (prefs ?first $?rest))
-  (removed (no ?first))
-  =>
-  (retract ?p)
-  (assert (process-ballot (id ?id) (prefs $?rest)))
-)
-
-;; 處理選票: 所有優先選擇都已被移除
-(defrule all-preferences-removed
-  (phase count-redistributed)
-  ?p <- (process-ballot (id ?id) (prefs))
-  =>
-  (retract ?p)
-  (assert (counted (id ?id)))
-)
-
-;; 計票完成，轉換到尋找當選人階段
-(defrule finish-redistribution
-  (declare (salience -10))
-  ?p <- (phase count-redistributed)
-  (not (process-ballot (id ?)))
-  =>
-  (retract ?p)
-  (assert (phase find-elected))
-)
-
 
 
