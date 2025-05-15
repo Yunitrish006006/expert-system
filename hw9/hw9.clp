@@ -1,18 +1,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 1. 先定義句子模板，再宣告 MAIN 模組匯出它
+;; 完整 CLIPS 程式（修正版）
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; 1. 定義句子模板與模組
 (deftemplate sentence (multislot content))
-
 (defmodule MAIN (export deftemplate sentence))
 (defmodule PRODUCTION (import MAIN deftemplate sentence))
 (defmodule RECOGNIZE (import MAIN deftemplate sentence))
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 2. BNF 終端符號的 deffacts（圖片中 productions）
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+;; 2. BNF 終端符號 deffacts
 (deffacts PRODUCTION::productions
   (production <determiner> a)
   (production <determiner> an)
@@ -33,7 +29,7 @@
   (production <verb> bite)
   (production <verb> scratch)
 
-  ;; term: determiner + up to三個 adj + noun
+  (production <term> <adjective> <noun>)
   (production <term> <noun>)
   (production <term> <determiner> <noun>)
   (production <term> <determiner> <adjective> <noun>)
@@ -45,14 +41,10 @@
 
   ;; 句子
   (production <sentence> <term> <verb> <term>)
-  (production <sentence> <term> <verb> <term> <indirect-object>)
+  (production <sentence> <term> <verb> <term> <indirect-object> <>)
 )
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 3. 主控制規則：讀入、拆詞、assert sentence
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defrule MAIN::control-rule
   (not (sentence (content $?)))
   =>
@@ -66,16 +58,32 @@
   (focus PRODUCTION RECOGNIZE)
 )
 
+;; 4. PRODUCTION 模組：先嘗試完整句式再依長度分階段 reduce
+(defrule PRODUCTION::reduce-sentence-io
+  (declare (salience 300))
+  ?f <- (sentence (content <term> ?v <term> <indirect-object>))
+  =>
+  (retract ?f)
+  (assert (sentence (content <sentence>)))
+  (focus RECOGNIZE)
+)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; PRODUCTION 模組：bottom-up 簡化規則（加 salience）
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defrule PRODUCTION::reduce-sentence
+  (declare (salience 290))
+  ?f <- (sentence (content <term> ?v <term>))
+  =>
+  (retract ?f)
+  (assert (sentence (content <sentence>)))
+  (focus RECOGNIZE)
+)
 
+;; 原有分級 reduce 規則，salience 保持
 (defrule PRODUCTION::reduce6
   (declare (salience 100))
   ?f <- (sentence (content $?front ?w1 ?w2 ?w3 ?w4 ?w5 ?w6 $?back))
   (production ?lhs ?w1 ?w2 ?w3 ?w4 ?w5 ?w6)
   =>
+  (printout t "[reduce6] " $?front ?lhs $?back crlf)
   (retract ?f)
   (assert (sentence (content $?front ?lhs $?back)))
 )
@@ -86,6 +94,7 @@
   (production ?lhs ?w1 ?w2 ?w3 ?w4 ?w5)
   =>
   (retract ?f)
+  (printout t "[reduce5] " $?front ?lhs $?back crlf)
   (assert (sentence (content $?front ?lhs $?back)))
 )
 
@@ -95,6 +104,7 @@
   (production ?lhs ?w1 ?w2 ?w3 ?w4)
   =>
   (retract ?f)
+  (printout t "[reduce4] " $?front ?lhs $?back crlf)
   (assert (sentence (content $?front ?lhs $?back)))
 )
 
@@ -104,6 +114,7 @@
   (production ?lhs ?w1 ?w2 ?w3)
   =>
   (retract ?f)
+  (printout t "[reduce3] " $?front ?lhs $?back crlf)
   (assert (sentence (content $?front ?lhs $?back)))
 )
 
@@ -113,6 +124,7 @@
   (production ?lhs ?w1 ?w2)
   =>
   (retract ?f)
+  (printout t "[reduce2] " $?front ?lhs $?back crlf)
   (assert (sentence (content $?front ?lhs $?back)))
 )
 
@@ -122,13 +134,21 @@
   (production ?lhs ?w1)
   =>
   (retract ?f)
+  (printout t "[reduce1] " $?front ?lhs $?back crlf)
   (assert (sentence (content $?front ?lhs $?back)))
 )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 5. RECOGNIZE 模組：判斷最終結果
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defrule PRODUCTION::reduce-io
+  (declare (salience 300))
+  ?f <- (sentence (content $?front ?w1 ?w2 $?back))
+  (production <indirect-object> ?w1 ?w2)
+  =>
+  (printout t "[reduce-io] " $?front <indirect-object> $?back crlf)
+  (retract ?f)
+  (assert (sentence (content $?front <indirect-object> $?back)))
+)
 
+;; 5. RECOGNIZE 模組：判斷最終結果 RECOGNIZE 模組：判斷最終結果
 (defrule RECOGNIZE::success
   ?s <- (sentence (content <sentence>))
   =>
@@ -144,8 +164,5 @@
   (printout t "Wrong!" crlf)
 )
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 6. 例子：載入之後執行
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 6. 執行示例：
 ;; (reset)  (run)
