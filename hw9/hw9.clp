@@ -40,8 +40,8 @@
   (production <indirect-object> <preposition> <term>)
 
   ;; 句子
-  (production <sentence> <term> <verb> <term>)
-  (production <sentence> <term> <verb> <term> <indirect-object> <>)
+  (production <sentence> <term> <verb> <term> <end>)
+  (production <sentence> <term> <verb> <term> <indirect-object> <end>)
 )
 
 ;; 3. 主控制規則：讀入、拆詞、assert sentence
@@ -54,7 +54,7 @@
     (printout t crlf "Bye!" crlf)
     (halt))
   (bind ?words (explode$ ?input))
-  (assert (sentence (content $?words)))
+  (assert (sentence (content $?words <end>)))
   (focus PRODUCTION RECOGNIZE)
 )
 
