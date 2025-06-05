@@ -1,43 +1,32 @@
 (deftemplate Level
     1 7
-    (
-        (High (3 0) (5 0.9)(6 1))
-    )
+    ((High (3 0) (5 0.9)(6 1)))
 )
 
 (deftemplate Price
     0 2000 ten-thousand-NTD
-    (
-        (Low (40 1) (60 0.8)(100 0))
-    )
+    ((Low (40 1) (60 0.8)(100 0)))
 )
 
 (deftemplate Years
     0 40 years
-    (
-        (Few (3 1) (5 0.9)(10 0))
-    )
+    ((Few (3 1) (5 0.9)(10 0)))
 )
 
 (deftemplate Capacity
     0 2000 liter
-    (
-        (Large (300 0) (600 1))
-    )
+    ((Large (300 0) (600 1)))
 )
 
 (deftemplate Horsepower
     0 500 HP
-    (
-        (High (120 0) (180 0.8)(200 1))
-    )
+    ((High (120 0) (180 0.8)(200 1)))
 )
 
 (deftemplate car-brand
     (slot brand)
     (slot level (type FUZZY-VALUE Level))
 )
-
 (deftemplate car
     (slot ID)
     (slot brand)
@@ -69,22 +58,50 @@
 )
 
 
-;; =============================
-;; FuzzyCLIPS 汽車篩選系統（推薦規則）
-;; =============================
-
-(defrule recommend-from-demand
-    ?b <-(car-brand (brand ?brand))
-    ?car <- (car 
-        (ID ?car_id)
-        (brand ?brand)
-        (model ?model)
-        (price ?price)
-        (car-age ?age)
-        (trunk ?trunk)
-        (horsepower ?hp)
-    )
+(defrule match-Level
+    (declare (CF 1.0))
+    (car-brand (brand ?brand)(level High))
     =>
-    (retract ?car)
-    (printout t "Car: " ?car_id " Degree: "  crlf)
+    (assert (high-level ?brand))
 )
+
+(defrule match-Price
+    (declare (CF 0.7))
+    (car (ID ?id)(price Low))
+    =>
+    (assert (low-price ?id))
+)
+
+(defrule match-Years
+    (declare (CF 0.8))
+    (car (ID ?id)(car-age Few))
+    =>
+    (assert (low-car-age ?id))
+)
+
+(defrule match-Capacity
+    (declare (CF 0.2))
+    (car (ID ?id)(trunk Large))
+    =>
+    (assert (high-trunk ?id))
+)
+
+(defrule match-Horsepower
+    (declare (CF 0.5))
+    (car (ID ?id)(horsepower High))
+    =>
+    (assert (high-horsepower ?id))
+)
+
+(defrule pritnt-result
+    (declare (salience -10))
+    ?f1 <- (low-price ?id)
+    ?f2 <- (low-car-age ?id)
+    ?f3 <- (high-trunk ?id)
+    ?f4 <- (high-horsepower ?id)
+    ?f5 <- (high-level ?brand)
+    (car (ID ?id)(brand ?brand))
+    =>
+    (printout t "Car: " ?id " Degree: "(/ (+ (get-cf ?f1) (get-cf ?f2) (get-cf ?f3) (get-cf ?f4) (get-cf ?f5)) 3.2) crlf)
+)
+
