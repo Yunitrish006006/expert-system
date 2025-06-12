@@ -5,6 +5,7 @@
 (deftemplate path (slot v1) (slot v2) (slot distance) (slot left) (multislot route))
 
 (deftemplate max (slot value))
+(deftemplate answers (slot distance) (multislot value))
 
 (deffacts initial
   (vertex A) (vertex B) (vertex C) (vertex D) (vertex E)
@@ -90,15 +91,27 @@
   (assert (max (value ?d)))
   (assert (path (v1 ?s) (v2 ?e) (distance ?d) (left ?d) (route $?r))))
 
-;; ============= 刪除用不到的 ==========
-
-
 ;; ========= 輸出結果 =========
 
-(defrule print-result
-    (declare (salience -1))
+(defrule get-first-step-answer
+    (declare (salience 3))
   (path (v1 ?s) (v2 ?e) (distance ?d) (route $?r))
-  (test (> (length$ ?r) ))
+  =>
+  (assert (answers (distance ?d) (value $?r)))
+)
+
+(defrule get-second-step-answer
+  (declare (salience 2))
+  ?a <- (answers (distance ?d1) (value $?r1))
+  ?b <- (answers (distance ?d2) (value $?r2))
+  (test (> (length$ ?r1) (length$ ?r2)))
+  =>
+  (retract ?b)
+)
+
+(defrule get-result
+  (declare (salience -1))
+  (answers (distance ?d) (value $?r))
   =>
   (printout t "Distance: " ?d crlf)
   (printout t "Route: (" (implode$ ?r) ")" crlf)
