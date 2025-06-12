@@ -76,15 +76,20 @@
 ;; ========= 產生最終 path =========
 
 (defrule generate-path
+    (declare (salience 10))
   (start ?s)
   (end ?e)
   (shortest (v1 ?s) (v2 ?e) (distance ?d) (route $?r))
   =>
   (assert (path (v1 ?s) (v2 ?e) (distance ?d) (left ?d) (route $?r))))
 
+;; ============= 刪除用不到的 ==========
+
+
 ;; ========= 輸出結果 =========
 
 (defrule print-result
+    (declare (salience -1))
   (path (v1 ?s) (v2 ?e) (distance ?d) (route $?r))
   =>
   (printout t "Distance: " ?d crlf)
