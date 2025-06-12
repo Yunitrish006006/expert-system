@@ -4,6 +4,8 @@
 (deftemplate shortest (slot v1) (slot v2) (slot distance) (multislot route))
 (deftemplate path (slot v1) (slot v2) (slot distance) (slot left) (multislot route))
 
+(deftemplate max (slot value))
+
 (deffacts initial
   (vertex A) (vertex B) (vertex C) (vertex D) (vertex E)
   (vertex F) (vertex G) (vertex H) (vertex I) (vertex J)
@@ -27,6 +29,7 @@
   (edge (v1 G) (v2 J) (distance 2))
   (edge (v1 H) (v2 I) (distance 25))
   (edge (v1 I) (v2 J) (distance 10))
+  (max (value 1000000))
 )
 
 ;; ========= 使用者輸入 =========
@@ -80,7 +83,11 @@
   (start ?s)
   (end ?e)
   (shortest (v1 ?s) (v2 ?e) (distance ?d) (route $?r))
+  ?om <- (max (value ?max))
+  (test (> ?max ?d))
   =>
+  (retract ?om)
+  (assert (max (value ?d)))
   (assert (path (v1 ?s) (v2 ?e) (distance ?d) (left ?d) (route $?r))))
 
 ;; ============= 刪除用不到的 ==========
@@ -91,8 +98,8 @@
 (defrule print-result
     (declare (salience -1))
   (path (v1 ?s) (v2 ?e) (distance ?d) (route $?r))
+  (test (> (length$ ?r) ))
   =>
   (printout t "Distance: " ?d crlf)
-  (printout t "Route: (" 
-            (implode$ ?r) 
-            ")" crlf))
+  (printout t "Route: (" (implode$ ?r) ")" crlf)
+)
