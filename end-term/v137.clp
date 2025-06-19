@@ -1,7 +1,4 @@
-;; 基於116分版本的保守優化 - 只改進優先級策略
-;; 保持原有成功的架構，強化3→2→1→0喜好時段優先級
 
-;; 模板定義（保持原有）
 (deftemplate teacher (slot ID) (slot weight))
 (deftemplate class (slot ID))
 (deftemplate classroom (slot ID) (slot type))
@@ -16,28 +13,22 @@
 (deftemplate favorite-time (slot teacher) (multislot time))
 (deftemplate refuse-time (slot teacher) (multislot time))
 
-;; =================================================================
-;; ====================== 新增與修正的部分開始 ======================
-;; =================================================================
-
-;; 為優化過程定義一個更通用的模板，支持"交換"與"移動"
 (deftemplate best-move
-    (slot type (type SYMBOL) (default none)) ; move_type can be 'swap' or 'move'
+    (slot type (type SYMBOL) (default none))
     (slot improvement (type NUMBER) (default 0))
     (slot id1 (type INTEGER) (default 0))
-    (slot id2 (type INTEGER) (default 0)) ; For 'swap', this is the second lesson. For 'move', it's unused.
-    (multislot new_time) ; For 'move', stores the new time slots
-    (multislot new_room) ; For 'move', stores the new room (must be multislot to match lesson)
+    (slot id2 (type INTEGER) (default 0))
+    (multislot new_time)
+    (multislot new_room)
 )
 
-;; 將輔助函數定義移到前面
 (deffunction some-member$ (?multifield1 $?multifield2)
   "Checks if any item in multifield1 is a member of multifield2."
   (foreach ?item ?multifield1
     (if (member$ ?item ?multifield2) then (return TRUE)))
-  (return FALSE))
+  (return FALSE)
+)
 
-;; 初始事實
 (deffacts initial
     (alltime 101 102 103 104 105 106 107 108 109 110
              201 202 203 204 205 206 207 208 209 210
@@ -46,29 +37,22 @@
              501 502 503 504 505 506 507 508 509 510)
     (phase get-lesson))
 
-;; 讀取 data.txt
 (defrule assert-data
     (declare (salience 10000))
     =>
     (load-facts "data.txt"))
 
-;; 選擇未排課的課程（保持原有邏輯 - 權重最低優先）
 (defrule select-best-candidate-lesson-final
     (declare (salience 100))
     ?p <- (phase get-lesson)
     (not (select ?))
-
-    ; 找到一位候選老師及其指標
     (lesson (ID ?lesson) (state 0) (teacher ?teacher))
     (teacher (ID ?teacher) (weight ?w1))
     (refuse-time (teacher ?teacher) (time $?r-t1))
-    
-    ; 關鍵：確保不存在任何其他老師，其"綜合優先分數"更高
     (not (and 
             (lesson (state 0) (teacher ?other-teacher&~?teacher))
             (teacher (ID ?other-teacher) (weight ?w2))
             (refuse-time (teacher ?other-teacher) (time $?r-t2))
-            ; 比較綜合優先分數: (困難度*10 - weight*weight)
             (test (> (- (* (length$ ?r-t2) 10) (*(* ?w2 ?w2) ?w2)) 
                      (- (* (length$ ?r-t1) 10) (*(* ?w1 ?w1) ?w1)) 
                   ))
@@ -78,8 +62,8 @@
     (assert (select ?lesson))
     (assert (phase schedule-3))
     (bind ?priority (- (* (length$ ?r-t1) 10) (* ?w1 ?w1)))
-    (printout t "策略決策: 選擇綜合優先級最高的老師 " ?teacher " (課程 " ?lesson ", 優先分 " ?priority ")" crlf))
-;; 初始排課規則... (省略未變更部分)
+    (printout t "Strategy: Select the teacher with the highest overall priority " ?teacher " (lesson " ?lesson ", score " ?priority ")" crlf))
+
 (defrule schedule-3-favorite-time
     (declare (salience 100))
     ?p <- (phase schedule-3)
@@ -99,7 +83,7 @@
     (assert (phase get-lesson))
     (modify ?f3 (weight (+ ?weight 3)))
     (modify ?f2 (state 1) (time ?t1 ?t2 ?t3) (room ?classroom ?classroom ?classroom))
-    (printout t "課程 " ?select " 排入3個喜好時段: " ?t1 " " ?t2 " " ?t3 crlf))
+    (printout t "lesson " ?select " scheduled3個preffered-time: " ?t1 " " ?t2 " " ?t3 crlf))
 
 (defrule schedule-2-favorite-consecutive
     (declare (salience 90))
@@ -122,7 +106,8 @@
     (assert (phase get-lesson))
     (modify ?f3 (weight (+ ?weight 2)))
     (modify ?f2 (state 1) (time ?t1 ?t2 ?t3) (room ?classroom ?classroom ?classroom))
-    (printout t "課程 " ?select " 排入2個喜好時段: " ?t1 " " ?t2 " " ?t3 crlf))
+    (printout t "lesson " ?select " scheduled 2 preffered-time: " ?t1 " " ?t2 " " ?t3 crlf)
+)
 
 (defrule schedule-1-favorite
     (declare (salience 80))
@@ -145,7 +130,8 @@
     (assert (phase get-lesson))
     (modify ?f3 (weight (+ ?weight 1)))
     (modify ?f2 (state 1) (time ?t1 ?t2 ?t3) (room ?classroom ?classroom ?classroom))
-    (printout t "課程 " ?select " 排入1個喜好時段: " ?t1 " " ?t2 " " ?t3 crlf))
+    (printout t "lesson " ?select " scheduled 1 preffered-time: " ?t1 " " ?t2 " " ?t3 crlf)
+)
 
 (defrule schedule-0-favorite-safe
     (declare (salience 70))
@@ -168,7 +154,8 @@
     (assert (phase get-lesson))
     (modify ?f3 (weight ?weight))
     (modify ?f2 (state 1) (time ?t1 ?t2 ?t3) (room ?classroom ?classroom ?classroom))
-    (printout t "課程 " ?select " 排入0個喜好時段: " ?t1 " " ?t2 " " ?t3 crlf))
+    (printout t "lesson " ?select " scheduled 0 preffered-time: " ?t1 " " ?t2 " " ?t3 crlf)
+)
 
 (defrule schedule-3-any-time
     (declare (salience 60))
@@ -187,7 +174,8 @@
     (assert (phase get-lesson))
     (modify ?f3 (weight (+ ?weight 5)))
     (modify ?f2 (state 1) (time ?t1 ?t2 ?t3) (room ?classroom ?classroom ?classroom))
-    (printout t "課程 " ?select " 應急安排: " ?t1 " " ?t2 " " ?t3 crlf))
+    (printout t "lesson " ?select " emergency schedule: " ?t1 " " ?t2 " " ?t3 crlf)
+)
 
 (defrule handle-unschedulable-lesson
     (declare (salience 50))
@@ -196,10 +184,8 @@
     =>
     (retract ?p ?f1)
     (assert (phase get-lesson))
-    (printout t "WARNING: Lesson " ?select " could not be scheduled in this cycle." crlf))
-
-
-;; ----------------- 全新優化階段 -----------------
+    (printout t "WARNING: Lesson " ?select " could not be scheduled in this cycle." crlf)
+)
 
 (defrule start-optimization-phase
     (declare (salience 40))
@@ -208,7 +194,7 @@
     =>
     (assert (phase optimize))
     (assert (exchange-round 0))
-    (printout t "=== 開始智能換課優化 ===" crlf)
+    (printout t "=== auto lesson rearrange ===" crlf)
     
     (bind ?current-favorites 0)
     (bind ?current-violations 0)
@@ -226,7 +212,7 @@
                         (bind ?current-violations (+ ?current-violations 1)))))))
     
     (bind ?baseline-score (- (* 2 ?current-favorites) (* 10 ?current-violations)))
-    (printout t "初始分數: " ?baseline-score " (喜好:" ?current-favorites " 違規:" ?current-violations ")" crlf))
+    (printout t "initial score: " ?baseline-score " (favorite:" ?current-favorites " Violation:" ?current-violations ")" crlf))
 
 (defrule start-new-optimization-round
     (declare (salience 35))
@@ -237,7 +223,7 @@
     (retract ?round)
     (assert (exchange-round (+ ?r 1)))
     (assert (best-move (type none)))
-    (printout t "=== 第 " (+ ?r 1) " 輪優化搜索開始 ===" crlf))
+    (printout t "=== The " (+ ?r 1) " optimization started ===" crlf))
 
 (defrule evaluate-swap-lessons
     (declare (salience 30))
@@ -272,7 +258,7 @@
     (bind ?total-improvement (+ ?fav-improvement ?ref-improvement))
     (if (> ?total-improvement ?current-improvement) then
         (modify ?best (type swap) (improvement ?total-improvement) (id1 ?id1) (id2 ?id2) (new_time) (new_room))
-        (printout t "找到更優交換: " ?id1 " <-> " ?id2 " (分數改善+" ?total-improvement ")" crlf)))
+        (printout t "better solution: " ?id1 " <-> " ?id2 " (score improvement +" ?total-improvement ")" crlf)))
 
 (defrule evaluate-move-to-empty-slot
     (declare (salience 29))
@@ -306,11 +292,7 @@
     (bind ?total-improvement (+ ?fav-improvement ?ref-improvement))
     (if (> ?total-improvement ?current-improvement) then
         (modify ?best (type move) (improvement ?total-improvement) (id1 ?id1) (id2 0) (new_time ?nt1 ?nt2 ?nt3) (new_room ?new_room_id ?new_room_id ?new_room_id))
-        (printout t "找到更優移動: " ?id1 " -> " ?nt1 "," ?nt2 "," ?nt3 " (分數改善+" ?total-improvement ")" crlf)))
-
-;; =================================================================
-;; ==================== 唯一的修正點在這裡 ========================
-;; =================================================================
+        (printout t "better move: " ?id1 " -> " ?nt1 "," ?nt2 "," ?nt3 " (score improvement+" ?total-improvement ")" crlf)))
 ;; (defrule execute-best-move
 ;;     (declare (salience 28))
 ;;     (phase optimize)
@@ -342,9 +324,6 @@
 ;;         (printout t "第 " ?r " 輪: 執行移動 " ?id1 " -> " (nth$ 1 ?new_time) " (分數改善+" ?imp ")" crlf)
 ;;     )
 ;;     (retract ?best))
-;; =================================================================
-;; ========================== 修正結束 ============================
-;; =================================================================
 
 (defrule no-improvement-found-and-finish
     (declare (salience 27))
@@ -354,7 +333,7 @@
     =>
     (retract ?best ?round)
     (assert (exchange-round 11))
-    (printout t "第 " ?r " 輪: 未找到任何有益操作，提前結束優化。" crlf))
+    (printout t ?r " round: end optimization for no improvement spaces" crlf))
 
 (defrule finish-optimization-phase
     (declare (salience 20))
@@ -384,10 +363,10 @@
     
     (bind ?final-score (- (* 2 ?final-favorites) (* 10 ?final-violations)))
     
-    (printout t "=== 最終排課結果 ===" crlf)
-    (printout t "喜好時段總數: " ?final-favorites crlf)
-    (printout t "拒絕時段違規: " ?final-violations crlf)
-    (printout t "預估基本分數: " ?final-score crlf)
+    (printout t "=== result ===" crlf)
+    (printout t "preffered-time total: " ?final-favorites crlf)
+    (printout t "violations: " ?final-violations crlf)
+    (printout t "predict scores: " ?final-score crlf)
     
     (open "result.txt" out "w")
     (do-for-all-facts ((?l lesson)) (= ?l:state 1)
@@ -395,4 +374,4 @@
                        (nth$ 1 ?l:time) " " (nth$ 2 ?l:time) " " (nth$ 3 ?l:time) ") (room "
                        (nth$ 1 ?l:room) " " (nth$ 2 ?l:room) " " (nth$ 3 ?l:room) "))" crlf))
     (close out)
-    (printout t "優化排課完成！結果已輸出到 result.txt" crlf))
+    (printout t "complete and save to \"result.txt\"" crlf))
