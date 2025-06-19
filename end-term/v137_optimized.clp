@@ -116,7 +116,7 @@
     =>
     (retract ?p ?f1)
     (assert (phase get-lesson))
-    (modify ?f3 (weight (+ ?weight 5))) ; 增加獎勵
+    (modify ?f3 (weight (+ ?weight 4))) ; 增加獎勵
     (modify ?f2 (state 1) (time ?t1 ?t2 ?t3) (room ?classroom ?classroom ?classroom))
     (printout t "課程 " ?select " 已排課(3個連續偏好時間): " ?t1 " " ?t2 " " ?t3 crlf))
 
