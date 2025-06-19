@@ -254,11 +254,11 @@
     (bind ?baseline-score (- (* 3 ?current-favorites) (* 15 ?current-violations)))
     (printout t "初始分數: " ?baseline-score " (偏好:" ?current-favorites " 違規:" ?current-violations ")" crlf))
 
-; 優化輪次開始 - 清理計數器
+; 優化輪次開始 - 增加專門的違規消除輪次
 (defrule start-new-optimization-round-enhanced
     (declare (salience 35))
     (phase optimize)
-    ?round <- (exchange-round ?r&:(< ?r 15)) ; 增加優化輪次
+    ?round <- (exchange-round ?r&:(< ?r 20)) ; 增加到20輪
     (not (best-move))
     =>
     (retract ?round)
@@ -267,7 +267,10 @@
         (retract ?ec))
     (assert (exchange-round (+ ?r 1)))
     (assert (best-move (type none)))
-    (printout t "=== 第 " (+ ?r 1) " 輪優化開始 ===" crlf))
+    (if (<= ?r 10) then
+        (printout t "=== 第 " (+ ?r 1) " 輪優化開始 (主要優化階段) ===" crlf)
+    else
+        (printout t "=== 第 " (+ ?r 1) " 輪優化開始 (違規消除專用階段) ===" crlf)))
 
 ; 優化的交換評估規則 - 防止重複評估
 (defrule evaluate-swap-lessons-enhanced
@@ -396,11 +399,11 @@
         (printout t "第 " ?r " 輪: 無有效改善方案 (最佳改善=" ?imp "), 結束本輪" crlf))
     (retract ?best))
 
-; 改進的結束條件 - 檢查違規並合理結束
-(defrule check-violations-and-finish
+; 改進的結束條件 - 堅持消除所有違規
+(defrule check-violations-and-finish-enhanced
     (declare (salience 27))
     (phase optimize)
-    ?round <- (exchange-round ?r&:(and (> ?r 0) (<= ?r 15)))
+    ?round <- (exchange-round ?r&:(and (> ?r 0) (<= ?r 20)))
     ?best <- (best-move (improvement ?imp&:(<= ?imp 0)))
     =>
     ; 統計當前違規數量
@@ -413,36 +416,36 @@
                 (bind ?current-violations (+ ?current-violations ?viol-count)))))
     
     (if (= ?current-violations 0) then
-        ; 沒有違規，可以結束優化
+        ; 沒有違規，完美結束
         (retract ?best ?round)
-        (assert (exchange-round 16))
-        (printout t "第 " ?r " 輪: 已無違規時段，提前結束優化！" crlf)
+        (assert (exchange-round 21))
+        (printout t "🎉第 " ?r " 輪: 已完全消除所有違規時段！完美優化完成！🎉" crlf)
     else
-        (if (< ?r 5) then
-            ; 前5輪繼續嘗試，即使沒有改善
+        (if (< ?r 15) then
+            ; 前15輪繼續嘗試
             (retract ?best ?round)
             (assert (exchange-round (+ ?r 1)))
-            (printout t "第 " ?r " 輪: 仍有 " ?current-violations " 個違規，繼續嘗試(第" (+ ?r 1) "輪)" crlf)
+            (printout t "第 " ?r " 輪: 仍有 " ?current-violations " 個違規，繼續優化(第" (+ ?r 1) "輪)" crlf)
         else
-            ; 5輪後如果還是沒改善就結束
+            ; 15輪後結束
             (retract ?best ?round)
-            (assert (exchange-round 16))
-            (printout t "第 " ?r " 輪: 仍有 " ?current-violations " 個違規，但已嘗試多輪，結束優化" crlf))))
+            (assert (exchange-round 21))
+            (printout t "第 " ?r " 輪: 仍有 " ?current-violations " 個違規，已達最大嘗試次數" crlf))))
 
-; 達到最大輪次時結束
-(defrule max-rounds-reached
+; 達到最大輪次時結束 - 更新為20輪
+(defrule max-rounds-reached-enhanced
     (declare (salience 26))
     (phase optimize)
-    ?round <- (exchange-round ?r&:(> ?r 15))
+    ?round <- (exchange-round ?r&:(> ?r 20))
     =>
     (retract ?round)
     (assert (phase output))
-    (printout t "達到最大優化輪次，結束優化" crlf))
+    (printout t "達到最大優化輪次(20輪)，結束優化" crlf))
 
-(defrule finish-optimization-phase
+(defrule finish-optimization-phase-enhanced
     (declare (salience 20))
     (phase optimize)
-    (exchange-round ?r&:(>= ?r 16))
+    (exchange-round ?r&:(>= ?r 21))
     =>
     (assert (phase output)))
 
@@ -522,3 +525,40 @@
     (modify ?best (type move) (improvement ?forced-improvement) (id1 ?id1) (id2 0) 
             (new_time ?nt1 ?nt2 ?nt3) (new_room ?new_room_id ?new_room_id ?new_room_id))
     (printout t "【強制消除違規】課程" ?id1 " (老師" ?t1 ") 從違規時段移至 " ?nt1 "," ?nt2 "," ?nt3 " (消除" ?old_violations "個違規)" crlf))
+
+; 專門針對違規課程的積極移動規則 - 更高優先級
+(defrule aggressive-violation-elimination
+    (declare (salience 35)) ; 最高優先級
+    (phase optimize)
+    ?best <- (best-move (improvement ?current-improvement))
+    
+    ; 找到任何有違規的課程
+    ?l1 <- (lesson (ID ?id1) (teacher ?t1) (class ?c1) (type ?type) (time $?old_time))
+    (refuse-time (teacher ?t1) (time $?ref1))
+    (test (> (count-violations ?old_time ?ref1) 0)) ; 確保有違規
+    
+    ; 找到任何可以移動到的時段（不一定是最優的）
+    (alltime $? ?nt1 ?nt2 ?nt3&:(= (+ ?nt1 2) ?nt3) $?)
+    (test (is-same-day ?nt1 ?nt3))
+    (classroom (ID ?new_room_id) (type ?type))
+    (test (= (count-violations (create$ ?nt1 ?nt2 ?nt3) ?ref1) 0)) ; 新時段無違規
+    
+    ; 確保沒有基本衝突
+    (not (lesson (teacher ?t1) (time $? ?nt1|?nt2|?nt3 $?)))
+    (not (lesson (class ?c1) (time $? ?nt1|?nt2|?nt3 $?)))
+    (not (lesson (time $? ?nt1|?nt2|?nt3 $?) (room $? ?new_room_id $?)))
+    
+    (favorite-time (teacher ?t1) (time $?fav1))
+    =>
+    (bind ?new-time (create$ ?nt1 ?nt2 ?nt3))
+    (bind ?old_violations (count-violations ?old_time ?ref1))
+    
+    ; 給消除違規一個巨大的獎勵分數，確保會被執行
+    (bind ?violation-bonus (* 100 ?old_violations)) ; 每消除一個違規得100分
+    (bind ?fav-change (* 2 (- (count-favorites ?new-time ?fav1) (count-favorites ?old_time ?fav1))))
+    (bind ?aggressive-improvement (+ ?violation-bonus ?fav-change))
+    
+    ; 強制設為最佳方案
+    (modify ?best (type move) (improvement ?aggressive-improvement) (id1 ?id1) (id2 0) 
+            (new_time ?nt1 ?nt2 ?nt3) (new_room ?new_room_id ?new_room_id ?new_room_id))
+    (printout t "🚨積極消除違規🚨 課程" ?id1 " 老師" ?t1 " 從違規時段 " (implode$ ?old_time) " 移至 " ?nt1 " " ?nt2 " " ?nt3 " (消除" ?old_violations "個違規)" crlf))
