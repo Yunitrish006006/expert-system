@@ -311,37 +311,37 @@
 ;; =================================================================
 ;; ==================== 唯一的修正點在這裡 ========================
 ;; =================================================================
-(defrule execute-best-move
-    (declare (salience 28))
-    (phase optimize)
-    (exchange-round ?r)
-    ?best <- (best-move (type ?type&:(neq ?type none))
-                         (improvement ?imp&:(> ?imp 0))
-                         (id1 ?id1)
-                         (id2 ?id2)
-                         (new_time $?new_time)
-                         (new_room $?new_room))
-    =>
-    (if (eq ?type swap) then
-        ; --- SWAP LOGIC ---
-        (bind ?l1 (nth$ 1 (find-fact ((?l lesson)) (eq (fact-slot-value ?l ID) ?id1))))
-        (bind ?l2 (nth$ 1 (find-fact ((?l lesson)) (eq (fact-slot-value ?l ID) ?id2))))
-        ; Get values from facts before modifying
-        (bind ?time1 (fact-slot-value ?l1 time))
-        (bind ?room1 (fact-slot-value ?l1 room))
-        (bind ?time2 (fact-slot-value ?l2 time))
-        (bind ?room2 (fact-slot-value ?l2 room))
-        ; Perform modifications
-        (modify ?l1 (time ?time2) (room ?room2))
-        (modify ?l2 (time ?time1) (room ?room1))
-        (printout t "第 " ?r " 輪: 執行交換 " ?id1 " <-> " ?id2 " (分數改善+" ?imp ")" crlf)
-    else if (eq ?type move) then
-        ; --- MOVE LOGIC ---
-        (bind ?l1 (nth$ 1 (find-fact ((?l lesson)) (eq (fact-slot-value ?l ID) ?id1))))
-        (modify ?l1 (time ?new_time) (room ?new_room))
-        (printout t "第 " ?r " 輪: 執行移動 " ?id1 " -> " (nth$ 1 ?new_time) " (分數改善+" ?imp ")" crlf)
-    )
-    (retract ?best))
+;; (defrule execute-best-move
+;;     (declare (salience 28))
+;;     (phase optimize)
+;;     (exchange-round ?r)
+;;     ?best <- (best-move (type ?type&:(neq ?type none))
+;;                          (improvement ?imp&:(> ?imp 0))
+;;                          (id1 ?id1)
+;;                          (id2 ?id2)
+;;                          (new_time $?new_time)
+;;                          (new_room $?new_room))
+;;     =>
+;;     (if (eq ?type swap) then
+;;         ; --- SWAP LOGIC ---
+;;         (bind ?l1 (nth$ 1 (find-fact ((?l lesson)) (eq (fact-slot-value ?l ID) ?id1))))
+;;         (bind ?l2 (nth$ 1 (find-fact ((?l lesson)) (eq (fact-slot-value ?l ID) ?id2))))
+;;         ; Get values from facts before modifying
+;;         (bind ?time1 (fact-slot-value ?l1 time))
+;;         (bind ?room1 (fact-slot-value ?l1 room))
+;;         (bind ?time2 (fact-slot-value ?l2 time))
+;;         (bind ?room2 (fact-slot-value ?l2 room))
+;;         ; Perform modifications
+;;         (modify ?l1 (time ?time2) (room ?room2))
+;;         (modify ?l2 (time ?time1) (room ?room1))
+;;         (printout t "第 " ?r " 輪: 執行交換 " ?id1 " <-> " ?id2 " (分數改善+" ?imp ")" crlf)
+;;     else if (eq ?type move) then
+;;         ; --- MOVE LOGIC ---
+;;         (bind ?l1 (nth$ 1 (find-fact ((?l lesson)) (eq (fact-slot-value ?l ID) ?id1))))
+;;         (modify ?l1 (time ?new_time) (room ?new_room))
+;;         (printout t "第 " ?r " 輪: 執行移動 " ?id1 " -> " (nth$ 1 ?new_time) " (分數改善+" ?imp ")" crlf)
+;;     )
+;;     (retract ?best))
 ;; =================================================================
 ;; ========================== 修正結束 ============================
 ;; =================================================================
