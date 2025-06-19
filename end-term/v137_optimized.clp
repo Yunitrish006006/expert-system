@@ -71,13 +71,13 @@
              501 502 503 504 505 506 507 508 509 510)
     (phase get-lesson))
 
-(defrule assert-data
+(defrule initialize-data-from-file
     (declare (salience 10000))
     =>
     (load-facts "data.txt"))
 
 ; 優化的課程選擇規則 - 使用改進的優先級計算
-(defrule select-best-candidate-lesson-optimized
+(defrule select-teacher-with-highest-priority-score
     (declare (salience 100))
     ?p <- (phase get-lesson)
     (not (select ?))
@@ -99,7 +99,7 @@
     (printout t "策略：選擇優先級最高的老師 " ?teacher " (課程 " ?lesson ", 分數 " ?priority ")" crlf))
 
 ; 優化的三個連續偏好時間排課規則
-(defrule schedule-3-favorite-time-optimized
+(defrule schedule-lesson-in-three-consecutive-favorite-times
     (declare (salience 100))
     ?p <- (phase schedule-3)
     ?f1 <- (select ?select)
@@ -121,7 +121,7 @@
     (printout t "課程 " ?select " 已排課(3個連續偏好時間): " ?t1 " " ?t2 " " ?t3 crlf))
 
 ; 優化的兩個偏好時間排課規則
-(defrule schedule-2-favorite-consecutive-optimized
+(defrule schedule-lesson-with-two-favorite-times-in-sequence
     (declare (salience 90))
     ?p <- (phase schedule-3)
     ?f1 <- (select ?select)
@@ -146,7 +146,7 @@
 )
 
 ; 優化的一個偏好時間排課規則
-(defrule schedule-1-favorite-optimized
+(defrule schedule-lesson-with-one-favorite-time-in-sequence
     (declare (salience 80))
     ?p <- (phase schedule-3)
     ?f1 <- (select ?select)
@@ -171,7 +171,7 @@
 )
 
 ; 優化的無偏好時間安全排課規則
-(defrule schedule-0-favorite-safe-optimized
+(defrule schedule-lesson-in-neutral-time-slots-avoiding-conflicts
     (declare (salience 70))
     ?p <- (phase schedule-3)
     ?f1 <- (select ?select)
@@ -196,7 +196,7 @@
 )
 
 ; 緊急排課規則 - 增加懲罰
-(defrule schedule-3-any-time-emergency
+(defrule schedule-lesson-in-any-available-slot-with-penalty
     (declare (salience 60))
     ?p <- (phase schedule-3)
     ?f1 <- (select ?select)
@@ -216,7 +216,7 @@
     (printout t "課程 " ?select " 緊急排課: " ?t1 " " ?t2 " " ?t3 crlf)
 )
 
-(defrule handle-unschedulable-lesson
+(defrule handle-unschedulable-lesson-and-continue
     (declare (salience 50))
     ?p <- (phase schedule-3)
     ?f1 <- (select ?select)
@@ -227,7 +227,7 @@
 )
 
 ; 優化開始階段 - 更詳細的統計
-(defrule start-optimization-phase-enhanced
+(defrule initialize-optimization-phase-with-baseline-statistics
     (declare (salience 40))
     (not (lesson (state 0)))
     (not (phase optimize))
@@ -255,7 +255,7 @@
     (printout t "初始分數: " ?baseline-score " (偏好:" ?current-favorites " 違規:" ?current-violations ")" crlf))
 
 ; 優化輪次開始 - 增加專門的違規消除輪次
-(defrule start-new-optimization-round-enhanced
+(defrule begin-new-optimization-round-with-violation-elimination
     (declare (salience 35))
     (phase optimize)
     ?round <- (exchange-round ?r&:(< ?r 20)) ; 增加到20輪
@@ -273,7 +273,7 @@
         (printout t "=== 第 " (+ ?r 1) " 輪優化開始 (違規消除專用階段) ===" crlf)))
 
 ; 優化的交換評估規則 - 防止重複評估
-(defrule evaluate-swap-lessons-enhanced
+(defrule evaluate-lesson-swap-for-schedule-improvement
     (declare (salience 30))
     (phase optimize)
     ?best <- (best-move (improvement ?current-improvement))
@@ -334,7 +334,7 @@
         (printout t "發現更好的交換方案: " ?id1 " <-> " ?id2 " (分數改善 +" ?total-improvement ")" crlf)))
 
 ; 優化的移動評估規則 - 更嚴格的條件
-(defrule evaluate-move-to-empty-slot-enhanced
+(defrule evaluate-lesson-move-to-empty-timeslot-for-violation-reduction
     (declare (salience 29))
     (phase optimize)
     ?best <- (best-move (improvement ?current-improvement))
@@ -368,7 +368,7 @@
         (printout t "發現更好的移動方案: " ?id1 " -> " ?nt1 "," ?nt2 "," ?nt3 " (分數改善 +" ?total-improvement ")" crlf)))
 
 ; 執行最佳移動 - 修復無限循環問題
-(defrule execute-best-move-fixed
+(defrule execute-best-optimization-move-and-prevent-infinite-loops
     (declare (salience 28))
     (phase optimize)
     (exchange-round ?r)
@@ -400,7 +400,7 @@
     (retract ?best))
 
 ; 改進的結束條件 - 堅持消除所有違規
-(defrule check-violations-and-finish-enhanced
+(defrule check-violation-status-and-determine-optimization-completion
     (declare (salience 27))
     (phase optimize)
     ?round <- (exchange-round ?r&:(and (> ?r 0) (<= ?r 20)))
@@ -433,7 +433,7 @@
             (printout t "第 " ?r " 輪: 仍有 " ?current-violations " 個違規，已達最大嘗試次數" crlf))))
 
 ; 達到最大輪次時結束 - 更新為20輪
-(defrule max-rounds-reached-enhanced
+(defrule terminate-optimization-when-maximum-rounds-reached
     (declare (salience 26))
     (phase optimize)
     ?round <- (exchange-round ?r&:(> ?r 20))
@@ -442,7 +442,7 @@
     (assert (phase output))
     (printout t "達到最大優化輪次(20輪)，結束優化" crlf))
 
-(defrule finish-optimization-phase-enhanced
+(defrule transition-from-optimization-to-output-phase
     (declare (salience 20))
     (phase optimize)
     (exchange-round ?r&:(>= ?r 21))
@@ -450,7 +450,7 @@
     (assert (phase output)))
 
 ; 優化的結果輸出 - 更詳細的統計
-(defrule output-final-result-enhanced
+(defrule generate-comprehensive-final-schedule-report
     (declare (salience -1000))
     (phase output)
     =>
@@ -490,7 +490,7 @@
     (printout t "完成並儲存至 \"result.txt\"" crlf))
 
 ; 專門處理違規課程的強制移動規則
-(defrule force-violation-elimination
+(defrule force-move-lessons-with-violation-to-safe-timeslots
     (declare (salience 31)) ; 比其他評估規則優先級更高
     (phase optimize)
     ?best <- (best-move (improvement ?current-improvement))
@@ -527,7 +527,7 @@
     (printout t "【強制消除違規】課程" ?id1 " (老師" ?t1 ") 從違規時段移至 " ?nt1 "," ?nt2 "," ?nt3 " (消除" ?old_violations "個違規)" crlf))
 
 ; 專門針對違規課程的積極移動規則 - 更高優先級
-(defrule aggressive-violation-elimination
+(defrule aggressively-eliminate-all-schedule-violations
     (declare (salience 35)) ; 最高優先級
     (phase optimize)
     ?best <- (best-move (improvement ?current-improvement))
